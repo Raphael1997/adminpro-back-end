@@ -1,7 +1,9 @@
 // getting-started.js
-// OG72LIh4BrlIWIse password
 const mongoose = require('mongoose');
 
+/**
+ * Conexion a la bases de datos
+ */
 const dbConnection = async () => {
 
     try {
@@ -11,10 +13,7 @@ const dbConnection = async () => {
                 useUnifiedTopology: true,
                 useCreateIndex: true
             });
-
-        console.log("BD online");
     } catch (error) {
-        console.log(error);
         throw new Error("Error al iniciar la base de datos")
     }
 }
