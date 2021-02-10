@@ -15,7 +15,8 @@ router.post("/",
         check("password", "La contraseña es obligatoria").notEmpty(),
         validarCampos
     ],
-    login)
+    login
+);
 
 
 
