@@ -1,6 +1,7 @@
 const Usuario = require("../models/usuarios.models");
 const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
+const { googleVerify } = require("../helpers/google-verify");
 
 //TODO: no da pista al usuario de que campo falta email o password
 const login = async (req, res) => {
@@ -41,6 +42,49 @@ const login = async (req, res) => {
     }
 }
 
+const loginGoogle = async (req, res) => {
+
+    const googleToken = req.body.token;
+
+    try {
+        const { name, email, picture } = await googleVerify(googleToken);
+
+        // verificar si existe el usuario
+        const usuarioDB = await Usuario.findOne({ email });
+        let usuario;
+        if (!usuarioDB) {
+            usuario = new Usuario({
+                nombre: name,
+                email,
+                password: "@@@",
+                img: picture,
+                google: true
+            });
+        } else {
+            usuario = usuarioDB;
+            usuario.google = true;
+        }
+
+        // guarudar en la bases de datos
+        await usuario.save();
+
+        // generar JWT
+        const token = await generarJWT(usuario.id);
+        res.json({
+            ok: true,
+            token
+        })
+    } catch (error) {
+        res.status(401).json({
+            ok: false,
+            msg: "Token incorrecto"
+        })
+    }
+
+
+}
+
 module.exports = {
-    login
+    login,
+    loginGoogle
 }
