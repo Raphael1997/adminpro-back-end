@@ -7,8 +7,6 @@ const fs = require("fs");
 const getUsuario = async (req, res) => {
 
     const desde = Number(req.query.desde) || 0;
-    console.log(desde);
-
     /*     const usuario = await Usuario.find({}, "nombre email role google")
             .skip(desde)
             .limit(5);
@@ -17,10 +15,10 @@ const getUsuario = async (req, res) => {
 
     // Codigo mas eficiente
     const [usuario, total] = await Promise.all([
-        Usuario.find({}, "nombre email role google")
+        Usuario.find({}, "nombre email role google img")
             .skip(desde)
             .limit(5),
-        Usuario.count()
+        Usuario.countDocuments()
     ])
 
     res.status(200).json({

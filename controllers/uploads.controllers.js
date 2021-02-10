@@ -1,7 +1,6 @@
+const path = require("path");
+const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
-const Usuario = require("../models/usuarios.models");
-const Medico = require("../models/medicos.models");
-const Hospital = require("../models/hopitales.models");
 const { actualizarImagen } = require('../helpers/actualizar_imagen');
 
 const cargarArchivo = async (req, res) => {
@@ -52,45 +51,48 @@ const cargarArchivo = async (req, res) => {
     // path para guardar la iamgen
     const ruta = `./uploads/${tipo}/${nombreArchivo}`;
 
-    //mover la iamgen
-    archivo.mv(ruta, (error) => {
-        if (error) {
-            return res.status(500).json({
-                ok: false,
-                msg: "Error al mover la imagen"
-            });
-        }
+    // Actualizar base de datos
+    const resultado = await actualizarImagen(tipo, id, nombreArchivo);
+    if (resultado) {
+        //mover la iamgen
+        archivo.mv(ruta, async (error) => {
+            if (error) {
+                return res.status(500).json({
+                    ok: false,
+                    msg: "Error al mover la imagen"
+                });
+            }
 
-        // Actualizar base de datos
-        const resultado = await actualizarImagen(tipo, id, nombreArchivo);
-        console.log(resultado);
-
-        res.json({
-            ok: true,
-            msg: "Archivo subido"
+            return res.json({
+                ok: true,
+                msg: "Archivo subido"
+            })
         })
-    })
+    } else {
+        return res.status(500).json({
+            ok: false,
+            msg: "ID incorrecto"
+        })
+    }
 
 }
 
-const actualizarImagen = async (tipo, id) => {
-    const [usuario, medico, hospital] = await Promise.all([
-        Usuario.findById(id),
-        Medico.findById(id),
-        Hospital.findById(id)
-    ]);
+const obtenerArchivo = async (req, res) => {
 
-    console.log(medico);
-}
-const borrarImagen = async (ruta) => {
+    const { tipo, foto } = req.params;
 
-    if (fs.existsSync(ruta)) {
-        // borrar la imagen anterior
-        fs.unlinkSync(ruta);
+    const rutaImagen = path.join(__dirname, `../uploads/${tipo}/${foto}`);
+
+    if (fs.existsSync(rutaImagen)) {
+        res.sendFile(rutaImagen);
+    } else {
+        const rutaImagen = path.join(__dirname, `../uploads/noImage.png`);
+        res.sendFile(rutaImagen);
     }
 }
 
 
 module.exports = {
-    cargarArchivo
+    cargarArchivo,
+    obtenerArchivo
 }
