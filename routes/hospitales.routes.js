@@ -14,7 +14,7 @@ router.get("/", getHospitales);
 router.post("/",
     [
         validarJWT,
-        check("nombre","El nombre del hospital es obligatorio").notEmpty(),
+        check("nombre", "El nombre del hospital es obligatorio").notEmpty(),
         validarCampos
     ],
     crearHospitales
@@ -22,7 +22,9 @@ router.post("/",
 
 router.put("/:id",
     [
-
+        validarJWT,
+        check("nombre", "El nombre del hospital es obligatorio").notEmpty(),
+        validarCampos
     ],
     actualizarHospitales);
 

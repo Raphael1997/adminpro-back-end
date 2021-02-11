@@ -1,7 +1,4 @@
 const Hospital = require('../models/hopitales.models');
-const bcrypt = require('bcryptjs');
-const { generarJWT } = require('../helpers/jwt');
-
 
 const getHospitales = async (req, res) => {
 
@@ -31,9 +28,9 @@ const crearHospitales = async (req, res) => {
             hospital: hospitalDB
         })
     } catch (error) {
-        return res.json(500).json({
+        res.status(500).json({
             ok: false,
-            msg: "Error no controlado por el back"
+            msg: "Error no controlado por el back - Hable con el ADM"
         })
     }
 
@@ -41,18 +38,69 @@ const crearHospitales = async (req, res) => {
 
 const actualizarHospitales = async (req, res) => {
 
+    const id = req.params.id;
+    const idUsuario = req.id;
+    try {
 
-    res.json({
-        ok: true,
+        const hospitalDB = await Hospital.findById(id);
 
-    })
+        if (!hospitalDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: "El hospital no existe"
+            })
+        }
+
+        /* hospitalDB.nombre = req.body.nombre; -> 1º forma */
+
+        const cambiosHospital = {
+            ...req.body,
+            usuario: idUsuario
+        }
+
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, { new: true });
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: "Error no controlado por el back - Hable con el ADM"
+        })
+    }
+
+
 }
 
 const borrarHospitales = async (req, res) => {
+    const id = req.params.id;
 
-    res.json({
-        ok: true,
-    })
+    try {
+        const hospital = await Hospital.findById(id);
+
+        if (!hospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Hospital no encontrado"
+            })
+        }
+        await Hospital.findOneAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: "Hospital borrado"
+        })
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Error no controlado por el back - Hable con el ADM"
+        })
+    }
+
 }
 
 module.exports = {

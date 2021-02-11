@@ -4,6 +4,11 @@ const fs = require('fs');
 const Medico = require('../models/medicos.models');
 const Hospital = require('../models/hopitales.models');
 
+
+/**
+ * Función para borrar una imagen según la ruta
+ * @param  path -> ruta de la imagen
+ */
 const borrarImagen = (path) => {
     if (fs.existsSync(path)) {
         // borrar la imagen anterior
@@ -11,7 +16,12 @@ const borrarImagen = (path) => {
     }
 }
 
-
+/**
+ *  Función para actualizar la foto según el tipo usuario
+ * @param  tipo -> carpeta donde se va a guardar la imagen
+ * @param  id -> ID del usuario
+ * @param   nombreArchivo -> Nombre del archivo
+ */
 const actualizarImagen = async (tipo, id, nombreArchivo) => {
 
     let pathViejo = '';

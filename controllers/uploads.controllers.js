@@ -3,10 +3,14 @@ const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
 const { actualizarImagen } = require('../helpers/actualizar_imagen');
 
+/**
+ * Función para cargar una foto y asignar a un usuario
+ * @param  req -> request
+ * @param  res -> response 
+ */
 const cargarArchivo = async (req, res) => {
 
     let rutaVieja = "";
-
 
     const { tipo, id, } = req.params;
 
@@ -77,6 +81,12 @@ const cargarArchivo = async (req, res) => {
 
 }
 
+/**
+ *  Función para obtener el archivo del usuario y guardar en el servidor.
+ *  Si el usuario no tiene una foto, enviamos una por defecto
+ * @param  req -> request
+ * @param  res -> response
+ */
 const obtenerArchivo = async (req, res) => {
 
     const { tipo, foto } = req.params;

@@ -80,11 +80,22 @@ const loginGoogle = async (req, res) => {
             msg: "Token incorrecto"
         })
     }
+}
 
+const renovarToken = async (req, res) => {
 
+    const id = req.id;
+    
+    // generar token
+    const token = await generarJWT(id);
+    res.json({
+        ok: true,
+        token
+    })
 }
 
 module.exports = {
     login,
-    loginGoogle
+    loginGoogle,
+    renovarToken
 }
