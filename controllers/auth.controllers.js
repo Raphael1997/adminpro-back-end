@@ -14,7 +14,7 @@ const login = async (req, res) => {
         if (!usuarioDB) {
             return res.status(404).json({
                 ok: false,
-                msg: "El email no existe - BORRAR"
+                msg: "Email incorrecto"
             })
         }
 
@@ -23,7 +23,7 @@ const login = async (req, res) => {
         if (!validarPassword) {
             return res.status(404).json({
                 ok: false,
-                msg: "La contraseña no existe - BORRAR"
+                msg: "Contraseña incorrecta"
             })
         }
 
@@ -85,12 +85,17 @@ const loginGoogle = async (req, res) => {
 const renovarToken = async (req, res) => {
 
     const id = req.id;
-    
+
     // generar token
     const token = await generarJWT(id);
+
+    //obtener usuario por ID
+    const usuario = await Usuario.findById(id);
+
     res.json({
         ok: true,
-        token
+        token,
+        usuario
     })
 }
 

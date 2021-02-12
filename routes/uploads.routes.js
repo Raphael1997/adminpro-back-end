@@ -11,6 +11,6 @@ const router = Router();
 router.use(subirArchivo());
 
 router.put("/:tipo/:id", validarJWT, cargarArchivo);
-router.get("/:tipo/:foto", validarJWT, obtenerArchivo);
+router.get("/:tipo/:foto", obtenerArchivo);
 
 module.exports = router;

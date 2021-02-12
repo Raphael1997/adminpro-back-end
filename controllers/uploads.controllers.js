@@ -69,7 +69,8 @@ const cargarArchivo = async (req, res) => {
 
             return res.json({
                 ok: true,
-                msg: "Archivo subido"
+                msg: "Archivo subido",
+                nombreArchivo
             })
         })
     } else {
