@@ -36,6 +36,11 @@ const crearHospitales = async (req, res) => {
 
 }
 
+/**
+ * 
+ * @param  req 
+ * @param  res 
+ */
 const actualizarHospitales = async (req, res) => {
 
     const id = req.params.id;
@@ -76,6 +81,9 @@ const actualizarHospitales = async (req, res) => {
 
 }
 
+/**
+ * 
+ */
 const borrarHospitales = async (req, res) => {
     const id = req.params.id;
 
@@ -93,7 +101,6 @@ const borrarHospitales = async (req, res) => {
 
         res.json({
             ok: true,
-            hospitalBorrado: hpBorrado,
             msg: "Hospital borrado"
         })
     } catch (error) {
