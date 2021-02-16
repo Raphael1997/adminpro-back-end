@@ -3,7 +3,7 @@ const Hospital = require('../models/hopitales.models');
 const getHospitales = async (req, res) => {
 
     const hospital = await Hospital.find()
-        .populate("usuario", "nombre")
+        .populate("usuario", "nombre img")
 
     res.json({
         ok: true,
@@ -88,10 +88,12 @@ const borrarHospitales = async (req, res) => {
                 msg: "Hospital no encontrado"
             })
         }
-        await Hospital.findOneAndDelete(id);
+
+        await Hospital.findByIdAndDelete(id);
 
         res.json({
             ok: true,
+            hospitalBorrado: hpBorrado,
             msg: "Hospital borrado"
         })
     } catch (error) {
