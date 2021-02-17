@@ -1,6 +1,6 @@
 const Medico = require('../models/medicos.models');
 const Hospital = require("../models/hopitales.models");
-
+const objectID = require('mongodb').ObjectID;
 /**
  *  Función para obtener medicos
  * @param  req -> request
@@ -17,6 +17,45 @@ const getMedicos = async (req, res) => {
         medico
     })
 }
+
+const getMedicosID = async (req, res) => {
+
+    const id = req.params.id;
+
+    try {
+
+        if (!objectID.isValid(id)) {
+            return res.status(404).json({
+                ok: false,
+                msg: "Introduzca un ID valido de MongoDB"
+            });
+        }
+
+        const medicoDB = await Medico.findById(id)
+            .populate("usuario", "nombre img")
+            .populate("hospital", "nombre img");
+
+        if (!medicoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: "El medico por ese ID no existe"
+            });
+        }
+
+        res.json({
+            ok: true,
+            medico: medicoDB
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: "Error no controlado por el back"
+        })
+    }
+
+}
+
 
 /**
  *  Función para crear medicos
@@ -150,5 +189,6 @@ module.exports = {
     getMedicos,
     crearMedicos,
     actualizarMedicos,
-    borrarMedicos
+    borrarMedicos,
+    getMedicosID
 }
