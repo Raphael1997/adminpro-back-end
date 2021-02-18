@@ -2,6 +2,7 @@ const Usuario = require("../models/usuarios.models");
 const bcrypt = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
 const { googleVerify } = require("../helpers/google-verify");
+const { getMenu } = require("../helpers/menu-frontend");
 
 //TODO: no da pista al usuario de que campo falta email o password
 const login = async (req, res) => {
@@ -31,13 +32,14 @@ const login = async (req, res) => {
 
         res.json({
             ok: true,
-            token
+            token,
+            menu: getMenu(usuarioDB.role)
         })
     } catch (error) {
         console.log("EROR");
         res.status(500).json({
             ok: false,
-            msg: "Error no controlado por el back"
+            msg: "Error no controlado por el back",
         })
     }
 }
@@ -72,7 +74,8 @@ const loginGoogle = async (req, res) => {
         const token = await generarJWT(usuario.id);
         res.json({
             ok: true,
-            token
+            token,
+            menu: getMenu(usuario.role)
         })
     } catch (error) {
         res.status(401).json({
@@ -95,7 +98,8 @@ const renovarToken = async (req, res) => {
     res.json({
         ok: true,
         token,
-        usuario
+        usuario,
+        menu: getMenu(usuario.role)
     })
 }
 

@@ -112,6 +112,7 @@ const actualizarUsuario = async (req, res) => {
         })
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: "Error no controlado por el back - Hable con el ADM"
