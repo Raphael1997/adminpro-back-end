@@ -36,10 +36,11 @@ const login = async (req, res) => {
             menu: getMenu(usuarioDB.role)
         })
     } catch (error) {
-        console.log("EROR");
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: "Error no controlado por el back",
+            error
         })
     }
 }
@@ -78,9 +79,11 @@ const loginGoogle = async (req, res) => {
             menu: getMenu(usuario.role)
         })
     } catch (error) {
+        console.log(error);
         res.status(401).json({
             ok: false,
-            msg: "Token incorrecto"
+            msg: "Token incorrecto",
+            error
         })
     }
 }
